@@ -1,0 +1,25 @@
+package aoc<year>.day<day>
+
+import lib.*
+
+suspend fun main() {
+    challenge<List<String>> {
+
+        day(<day>)
+        year(<year>)
+
+        parser {
+            it.readLines()
+        }
+
+        solver {
+            println("Solving challenge 1...")
+            null
+        }
+
+        solver {
+            println("Solving challenge 2...")
+            null
+        }
+    }
+}
