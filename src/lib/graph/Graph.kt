@@ -1,5 +1,7 @@
 package lib.graph
 
+import java.util.OptionalLong
+
 class Graph<T>(val edges: List<Edge<T>>) {
     val nodes = (edges.map { it.start } union edges.map { it.end }).toSet()
     val connections = nodes.associateWith { node ->
@@ -8,37 +10,43 @@ class Graph<T>(val edges: List<Edge<T>>) {
             .map { it.end to it.cost }
     }
 
-    fun shortestPathFromNodeTo(
-        node: T,
-        dest: T,
-    ): Long {
+    fun shortestDistanceFromTo(node: T, dest: T): Long? {
+        return shortestDistanceFromTo(node) { it == dest }
+    }
 
-        val unvisitedNodes = this.nodes.associateWith { Long.MAX_VALUE }.toMutableMap()
+    fun shortestDistanceFromTo(
+        node: T,
+        predicate: (T) -> Boolean,
+    ): Long? {
+
+        val unvisitedNodes = this.nodes.associateWith<T, Long?> { null }.toMutableMap()
         unvisitedNodes[node] = 0
         val paths = this.nodes.associateWith { "" }.toMutableMap()
 
         var currentNode: T? = node
         while (currentNode != null) {
-            if (currentNode == dest) {
+            if (predicate(currentNode)) {
                 //println("Path: ${paths[currentNode]}" + "- ($currentNode)")
-                return unvisitedNodes[currentNode]!!
+                return unvisitedNodes[currentNode]
             }
 
-            this.connections[currentNode]!!
+            this.connections[currentNode].orEmpty()
                 .filter { unvisitedNodes.containsKey(it.first) }
                 .forEach {
+                    val oldDist = unvisitedNodes[it.first]
                     val newDist = unvisitedNodes[currentNode]!! + it.second
-                    if( newDist < unvisitedNodes.getOrDefault(it.first, Long.MAX_VALUE))
-                    {
+
+                    if (oldDist == null || newDist < oldDist) {
                         unvisitedNodes[it.first] = newDist
                         paths[it.first] = paths.getOrDefault(currentNode, "") + "- ($currentNode)"
                     }
                 }
+
             unvisitedNodes.remove(currentNode)
-            currentNode = unvisitedNodes.minByOrNull { it.value }?.key
+            currentNode = unvisitedNodes.filter { it.value != null }.minByOrNull { it.value!! }?.key
         }
 
-        return Long.MAX_VALUE
+        return null
     }
 }
 
