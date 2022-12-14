@@ -17,6 +17,31 @@ fun <T> Array<Array<T>>.isValidCoord(i: Int, j: Int): Boolean {
     return i > -1 && j > -1 && i < this.size && j < this.first().size
 }
 
+fun <T> Array<Array<T>>.tryMove(from: Pair<Int, Int>, direction: Pair<Int, Int>): Pair<T?, Pair<Int, Int>> {
+    val (x, y) = from.first + direction.first to from.second + direction.second
+    return if(this.isValidCoord(x, y)) {
+        this[x][y] to (x to y)
+    } else {
+        null to (x to y)
+    }
+}
+
+fun <T> Array<Array<T>>.draw(from: Pair<Int, Int>, to: Pair<Int, Int>, value: T) {
+    if (from.first == to.first) {
+        val coords = listOf(from.second, to.second).sorted()
+        (coords[0]..coords[1]).forEach {
+            this[from.first][it] = value
+        }
+    } else if (from.second == to.second) {
+        val coords = listOf(from.first, to.first).sorted()
+        (coords[0]..coords[1]).forEach {
+            this[it][from.second] = value
+        }
+    } else {
+        throw Exception("Coordinates do not match: $from, $to")
+    }
+}
+
 fun <T> Array<Array<T>>.print() {
     for (i in this.first().indices) {
         for (j in this.indices) {
