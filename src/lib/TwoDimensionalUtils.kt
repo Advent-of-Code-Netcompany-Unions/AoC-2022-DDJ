@@ -8,6 +8,10 @@ fun getNeighbourCoords(i: Int, j: Int, diagonals: Boolean = false): List<Pair<In
     return neighbours
 }
 
+fun Pair<Int, Int>.getNeighbours(): List<Pair<Int, Int>> {
+    return getNeighbourCoords(this.first, this.second)
+}
+
 fun <T> Array<Array<T>>.getNeighbours(i: Int, j: Int, diagonals: Boolean = false): List<Pair<Pair<Int, Int>, T>> {
     val neighbours = getNeighbourCoords(i, j, diagonals)
     return neighbours.filter { this.isValidCoord(it.first, it.second) }.map { it to this[it.first][it.second] }
@@ -77,4 +81,41 @@ operator fun Pair<IntProgression, IntProgression>.minus(other: Pair<IntProgressi
             .plus(mappedXs)
             .plus(mappedYs)
             .filter { !it.first.isEmpty() && !it.second.isEmpty() }
+}
+
+fun Pair<Int, Int>.adjacent(direction: CardinalDirection): Pair<Int, Int> {
+    return when (direction) {
+        CardinalDirection.East -> x() + 1 to y()
+        CardinalDirection.South -> x() to y() + 1
+        CardinalDirection.West -> x() - 1 to y()
+        CardinalDirection.North -> x() to y() - 1
+    }
+}
+
+enum class CardinalDirection(val value: Int) {
+    East(0),
+    South(1),
+    West(2),
+    North(3);
+
+    fun turn(change: RelativeDirection): CardinalDirection {
+        return when (change) {
+            RelativeDirection.Left -> CardinalDirection.values().first { it.value == (this.value - 1).wrapAt(4) }
+            RelativeDirection.Right -> CardinalDirection.values().first { it.value == (this.value + 1) % 4 }
+        }
+    }
+}
+
+enum class RelativeDirection(val char: Char) {
+    Left('L'),
+    Right('R')
+}
+
+fun <T> Pair<T, T>.x() = first
+fun <T> Pair<T, T>.y() = second
+
+fun Pair<Int, Int>.wrapAt(limits: Pair<Int, Int>): Pair<Int, Int> {
+    val x = this.x().wrapAt(limits.x())
+    val y = this.y().wrapAt(limits.y())
+    return x to y
 }

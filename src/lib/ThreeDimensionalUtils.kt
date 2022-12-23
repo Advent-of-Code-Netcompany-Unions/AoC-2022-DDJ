@@ -1,6 +1,5 @@
 package lib
 
-import java.lang.Math.pow
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -119,4 +118,14 @@ class Cube(val first: IntProgression, val second: IntProgression, val third: Int
 fun Triple<Int, Int, Int>.distanceTo(other: Triple<Int, Int, Int>): Double {
 
     return sqrt((this.first.toDouble() - other.first).pow(2) + (this.second.toDouble() - other.second).pow(2) + (this.third.toDouble() - other.third).pow(2))
+}
+
+fun Triple<Int, Int, Int>.getNeighbours(): Set<Triple<Int, Int, Int>> {
+    return setOf(
+        Triple(this.first - 1, this.second, this.third),
+        Triple(this.first + 1, this.second, this.third),
+        Triple(this.first, this.second - 1, this.third),
+        Triple(this.first, this.second + 1, this.third),
+        Triple(this.first, this.second, this.third - 1),
+        Triple(this.first, this.second, this.third + 1))
 }

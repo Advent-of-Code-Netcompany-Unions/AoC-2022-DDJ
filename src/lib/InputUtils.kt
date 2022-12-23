@@ -18,6 +18,10 @@ fun List<String>.get2DArray(): Array<Array<Char>> {
     return Array(width) { i -> Array(height) { j -> this[j][i] } }
 }
 
+fun List<String>.get2DArray(height: Int, width: Int, padding: Char): Array<Array<Char>> {
+    return Array(width) { i -> Array(height) { j -> if(j < this.size && i < this[j].length) this[j][i] else padding } }
+}
+
 fun List<String>.readStringsAsDigits(): List<List<Int>> {
     return this.map {
         it.map {

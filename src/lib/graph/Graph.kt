@@ -10,6 +10,12 @@ class Graph<T>(val edges: List<Edge<T>>) {
             .map { it.end to it.cost }
     }
 
+    val distances = nodes.map { n -> n to nodes.map { it to shortestDistanceFromTo(n, it) } }
+
+    fun shortestDistanceFromToLookup(node: T, dest: T): Long? {
+        return distances.first { it.first == node }.second.first { it.first == dest }.second
+    }
+
     fun shortestDistanceFromTo(node: T, dest: T): Long? {
         return shortestDistanceFromTo(node) { it == dest }
     }
