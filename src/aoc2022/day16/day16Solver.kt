@@ -27,7 +27,7 @@ suspend fun main() {
         solver {
             println("Solving challenge 1...")
             val connections = it.flatMap { p -> p.second.map { Edge(p.first.first, it) } }
-            val graph = Graph(connections)
+            val graph = connections.buildGraph()
             val closedValves = it.map { it.first }.filter { it.second > 0 }.toMutableList()
 
             findOptimalPath(graph, closedValves, 0, 30, listOf("AA")).toString()
@@ -36,7 +36,7 @@ suspend fun main() {
         solver {
             println("Solving challenge 2...")
             val connections = it.flatMap { p -> p.second.map { Edge(p.first.first, it) } }
-            val graph = Graph(connections)
+            val graph = connections.buildGraph()
             val closedValves = it.map { it.first }.filter { it.second > 0 }.toMutableList()
 
             findOptimalPaths(graph, closedValves, 0, 26L to 26L, listOf("AA") to listOf("AA")).toString()

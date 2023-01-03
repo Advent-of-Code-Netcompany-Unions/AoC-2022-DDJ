@@ -3,6 +3,7 @@ package aoc2022.day12
 import lib.*
 import lib.graph.Edge
 import lib.graph.Graph
+import lib.graph.buildGraph
 
 suspend fun main() {
     challenge<Array<Array<Char>>> {
@@ -64,5 +65,5 @@ fun buildGraph(input: Array<Array<Char>>, edgeQualifier: (Int) -> Boolean)
         i++
     }
 
-    return Triple(Graph(edges), start!!, dest!!)
+    return Triple(edges.buildGraph(), start!!, dest!!)
 }
